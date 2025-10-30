@@ -298,10 +298,10 @@ EOF
 {
   "pubkey": {"@type":"/cosmos.crypto.ed25519.PubKey","key":"oWg2ISpLF405Jcm2vXV+2v4fnjodh6aafuIdeoW+rUw="},
   "amount": "1000000ubadge",
-  "moniker": "🏆OshVanK🏆",
-  "identity": "17E09C468EDFE232",
+  "moniker": "OshVanK",
+  "identity": "17E09C4xxxxxxx2",
   "website": "https://oshvank.xyz",
-  "security": "worms_Ss@hotmail.com",
+  "security": "xxxxx@xxxx.com",
   "details": "Professional validator service",
   "commission-rate": "0.05",
   "commission-max-rate": "0.20",
