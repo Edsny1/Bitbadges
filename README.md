@@ -7,14 +7,41 @@ sudo apt update && sudo apt upgrade -y
 sudo apt-get install git curl build-essential make jq gcc snapd chrony lz4 tmux unzip bc -y
 ```
 
-## Go Kurulumu
+## Go Versiyon Kontrolü ve Kurulumu
+
+**ÖNEMLİ:** Önce mevcut Go versiyonunuzu kontrol edin:
 
 ```bash
+go version
+```
+
+### Seçenek 1: Mevcut Go Versiyonu Uygunsa (1.21 veya üzeri)
+
+Eğer sisteminizde Go 1.21 veya daha üst versiyonu varsa, Go kurulumunu atlayabilirsiniz. Doğrudan **Node Kurulumu** bölümüne geçin.
+
+### Seçenek 2: Go Versiyonu Güncellenmeli
+
+**⚠️ UYARI:** Aşağıdaki komutlar mevcut Go kurulumunu ve $HOME/go dizinindeki TÜM dosyaları silecektir! 
+
+**Devam etmeden önce:**
+1. `$HOME/go` dizininde başka projelere ait dosyalar varsa YEDEK ALIN
+2. Diğer projelerin binary dosyalarını başka bir yere kopyalayın
+3. Emin olmadığınız dosyaları silmeyin
+
+```bash
+# Yedekleme örneği (ihtiyacınıza göre düzenleyin)
+mkdir -p $HOME/go_backup
+cp -r $HOME/go/bin $HOME/go_backup/
+
+# Eski Go'yu temizleme
 rm -rf $HOME/go
 sudo rm -rf /usr/local/go
+
+# Yeni Go'yu kurma
 cd $HOME
 curl https://dl.google.com/go/go1.24.5.linux-amd64.tar.gz | sudo tar -C/usr/local -zxvf -
 
+# Ortam değişkenlerini ayarlama (.profile dosyasında zaten varsa tekrar eklemeyin)
 cat <<'EOF' >>$HOME/.profile
 export GOROOT=/usr/local/go
 export GOPATH=$HOME/go
@@ -26,7 +53,23 @@ source $HOME/.profile
 go version
 ```
 
+### Seçenek 3: Alternatif - Go Version Manager (GVM) Kullanımı
+
+Birden fazla Go versiyonu kullanmanız gerekiyorsa GVM önerilir:
+
+```bash
+# GVM kurulumu
+bash < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)
+source ~/.gvm/scripts/gvm
+
+# Go 1.24.5 kurulumu
+gvm install go1.24.5 -B
+gvm use go1.24.5 --default
+```
+
 ## Node Kurulumu
+
+**Not:** Eğer diğer Cosmos SDK tabanlı projeler için binary dosyalarınız `$HOME/go/bin` dizinindeyse, bu adımlar onları etkilemez. Ancak yine de önemli binary dosyalarınızı yedeklemeniz önerilir.
 
 ```bash
 cd $HOME
@@ -35,7 +78,10 @@ git clone https://github.com/BitBadges/bitbadgeschain.git
 cd bitbadgeschain
 git checkout v16
 make build-linux/amd64
+
+# Binary dosyasını kopyalama
 mv build/bitbadgeschain-linux-amd64 $HOME/go/bin/bitbadgeschaind
+chmod +x $HOME/go/bin/bitbadgeschaind
 bitbadgeschaind version
 ```
 
