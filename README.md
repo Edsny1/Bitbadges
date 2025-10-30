@@ -263,33 +263,87 @@ bitbadgeschaind keys show cüzdan-adı -a
 
 Node'unuzun tamamen senkronize olduğundan emin olun ve cüzdanınızda yeterli token olduğunu kontrol edin.
 
+### Adım 1: PubKey'inizi Alın
+
 ```bash
-bitbadgeschaind tx staking create-validator \
-  --amount 1000000ubadge \
-  --commission-max-change-rate "0.05" \
-  --commission-max-rate "0.20" \
-  --commission-rate "0.05" \
-  --min-self-delegation "1" \
-  --pubkey=$(bitbadgeschaind tendermint show-validator) \
-  --moniker "VALIDATOR-ADINIZ" \
-  --website "https://websiteadresiniz.com" \
-  --identity "KEYBASE-ID" \
-  --details "Validator açıklamanız" \
-  --security-contact="email@adresiniz.com" \
-  --chain-id bitbadges-1 \
+bitbadgeschaind tendermint show-validator
+```
+
+Bu komut size pubkey verecektir. Örnek: `{"@type":"/cosmos.crypto.ed25519.PubKey","key":"oWg2ISpLF405Jcm2vXV+2v4fnjodh6aafuIdeoW+rUw="}`
+
+### Adım 2: Validator JSON Dosyası Oluşturun
+
+Aşağıdaki komutu çalıştırarak `validator.json` dosyası oluşturun. **PUBKEY** kısmına yukarıdaki komuttan aldığınız çıktıyı yapıştırın:
+
+```bash
+cat << EOF > $HOME/validator.json
+{
+  "pubkey": PUBKEY_BURAYA,
+  "amount": "1000000ubadge",
+  "moniker": "VALIDATOR-ADINIZ",
+  "identity": "KEYBASE-ID",
+  "website": "https://websiteadresiniz.com",
+  "security": "email@adresiniz.com",
+  "details": "Validator açıklamanız",
+  "commission-rate": "0.05",
+  "commission-max-rate": "0.20",
+  "commission-max-change-rate": "0.05",
+  "min-self-delegation": "1"
+}
+EOF
+```
+
+**Örnek validator.json:**
+```json
+{
+  "pubkey": {"@type":"/cosmos.crypto.ed25519.PubKey","key":"oWg2ISpLF405Jcm2vXV+2v4fnjodh6aafuIdeoW+rUw="},
+  "amount": "1000000ubadge",
+  "moniker": "🏆OshVanK🏆",
+  "identity": "17E09C468EDFE232",
+  "website": "https://oshvank.xyz",
+  "security": "worms_Ss@hotmail.com",
+  "details": "Professional validator service",
+  "commission-rate": "0.05",
+  "commission-max-rate": "0.20",
+  "commission-max-change-rate": "0.05",
+  "min-self-delegation": "1"
+}
+```
+
+### Adım 3: Validator Oluşturma Komutu
+
+**Standart Port (26657) Kullanıyorsanız:**
+```bash
+bitbadgeschaind tx staking create-validator $HOME/validator.json \
   --from cüzdan-adı \
+  --chain-id bitbadges-1 \
   --gas auto \
   --gas-adjustment 1.5 \
   --fees 5000ubadge \
   -y
 ```
 
+**Özel Port (örneğin 56657) Kullanıyorsanız:**
+```bash
+bitbadgeschaind tx staking create-validator $HOME/validator.json \
+  --from cüzdan-adı \
+  --chain-id bitbadges-1 \
+  --gas auto \
+  --gas-adjustment 1.5 \
+  --fees 5000ubadge \
+  --node http://localhost:56657 \
+  -y
+```
+
 **Not:** 
-- `--moniker`: Validator adınız
-- `--website`: Web siteniz (opsiyonel)
-- `--identity`: Keybase ID'niz (opsiyonel, keybase.io'dan alabilirsiniz)
-- `--details`: Validator hakkında açıklama
-- `--from`: Cüzdan adınız
+- `moniker`: Validator adınız (emoji de kullanabilirsiniz)
+- `website`: Web siteniz (opsiyonel)
+- `identity`: Keybase ID'niz (opsiyonel, keybase.io'dan alabilirsiniz)
+- `details`: Validator hakkında açıklama
+- `security`: İletişim e-posta adresiniz
+- `amount`: Stake edeceğiniz miktar (1000000ubadge = 1 BADGE)
+- `commission-rate`: Komisyon oranınız (0.05 = %5)
+- `--from`: Cüzdan adınızı yazın
 
 ## Validator Düzenleme
 
