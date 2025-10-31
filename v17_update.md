@@ -170,6 +170,51 @@ find $HOME/.bitbadgeschain/cosmovisor/ -type f -name "bitbadgeschaind"
 
 ---
 
+### Adım 7: Manuel Upgrade Link Oluşturma (Cosmovisor Otomatik Geçiş Yapmazsa)
+
+Bazı durumlarda Cosmovisor otomatik geçiş yapamayabilir. Bu durumda manuel olarak current link'i oluşturmanız gerekir:
+
+#### Servisi Durdurun
+
+```bash
+sudo systemctl stop bitbadgeschaind
+```
+
+#### Current Link'i Manuel Oluşturun
+
+```bash
+rm -rf $HOME/.bitbadgeschain/cosmovisor/current
+ln -s $HOME/.bitbadgeschain/cosmovisor/upgrades/v17 $HOME/.bitbadgeschain/cosmovisor/current
+```
+
+#### Link'i Doğrulayın
+
+```bash
+ls -la $HOME/.bitbadgeschain/cosmovisor/current/bin/bitbadgeschaind
+```
+
+#### Versiyonu Kontrol Edin
+
+```bash
+$HOME/.bitbadgeschain/cosmovisor/current/bin/bitbadgeschaind version
+```
+
+**Beklenen Çıktı:** `v17`
+
+#### Servisi Başlatın
+
+```bash
+sudo systemctl start bitbadgeschaind
+```
+
+#### Logları İzleyin
+
+```bash
+journalctl -u bitbadgeschaind -f
+```
+
+---
+
 ## 📊 Güncelleme Öncesi Kontrol Listesi
 
 Aşağıdaki tüm maddeleri kontrol edin:
@@ -182,6 +227,7 @@ Aşağıdaki tüm maddeleri kontrol edin:
 - [ ] Binary çalıştırılabilir izinlere sahip (`chmod +x`)
 - [ ] Binary versiyon kontrolü yapıldı (`v17` çıktısı alındı)
 - [ ] Cosmovisor servis dosyası doğru yapılandırılmış
+- [ ] **ÖNEMLİ:** Blok #6624000'e ulaşıldığında Adım 7'deki manuel link oluşturma işlemini yapın
 
 ---
 
@@ -259,19 +305,25 @@ Son 100 log satırında hata olmadığını kontrol edin.
 
 ### Problem: Node Blok #6624000'de Durdu
 
+**Neden:** Cosmovisor otomatik geçiş yapamadı ve current link'i güncellemedi.
+
 **Çözüm:**
 
 ```bash
 # Servisi durdurun
 sudo systemctl stop bitbadgeschaind
 
-# Binary'nin doğru yerde olduğunu kontrol edin
-ls -la $HOME/.bitbadgeschain/cosmovisor/upgrades/v17/bin/bitbadgeschaind
+# Current link'i manuel oluşturun
+rm -rf $HOME/.bitbadgeschain/cosmovisor/current
+ln -s $HOME/.bitbadgeschain/cosmovisor/upgrades/v17 $HOME/.bitbadgeschain/cosmovisor/current
 
-# İzinleri kontrol edin
-chmod +x $HOME/.bitbadgeschain/cosmovisor/upgrades/v17/bin/bitbadgeschaind
+# Link'i doğrulayın
+ls -la $HOME/.bitbadgeschain/cosmovisor/current/bin/bitbadgeschaind
 
-# Servisi tekrar başlatın
+# Versiyonu kontrol edin
+$HOME/.bitbadgeschain/cosmovisor/current/bin/bitbadgeschaind version
+
+# Servisi başlatın
 sudo systemctl start bitbadgeschaind
 
 # Logları izleyin
@@ -333,9 +385,6 @@ bitbadgeschaind tx slashing unjail \
   --fees 5000ubadge \
   -y
 ```
-
----
-
 
 ---
 
