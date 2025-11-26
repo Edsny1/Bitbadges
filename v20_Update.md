@@ -9,7 +9,7 @@ Bu talimatları **upgrade bloğuna ulaşmadan ÖNCE** tamamlayın. Upgrade bloğ
 ## 📋 v20 Upgrade Bilgileri
 
 - **Upgrade Adı:** v20
-- **Upgrade Blok Yüksekliği:** TBA (Duyurulacak)
+- **Upgrade Blok Yüksekliği:** 7152000
 - **Mevcut Versiyon:** v19
 - **Hedef Versiyon:** v20
 
