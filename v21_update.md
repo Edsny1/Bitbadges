@@ -1,4 +1,3 @@
-Görüntüdeki formata göre hazırlıyorum. İşte tek tıklamayla kopyalayabileceğiniz, GitHub'a ekleyebileceğiniz tam dokümantasyon:
 
 ---
 
