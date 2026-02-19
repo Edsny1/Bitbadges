@@ -297,6 +297,21 @@ sudo systemctl start bitbadgeschaind
 journalctl -u bitbadgeschaind -f
 ```
 
+
+### Evm/Json-Rpc yapılandırması (Opsiyonel)-Hızlı Komut
+```
+sed -i '/^\[evm\]/,/^\[/{/evm-chain-id/d}' $HOME/.bitbadgeschain/config/app.toml 2>/dev/null; \
+grep -q "^\[evm\]" $HOME/.bitbadgeschain/config/app.toml || echo -e "\n[evm]" >> $HOME/.bitbadgeschain/config/app.toml; \
+grep -q "evm-chain-id" $HOME/.bitbadgeschain/config/app.toml && \
+sed -i 's/^evm-chain-id.*/evm-chain-id = 50024/' $HOME/.bitbadgeschain/config/app.toml || \
+echo 'evm-chain-id = 50024' >> $HOME/.bitbadgeschain/config/app.toml; \
+grep -q "^\[json-rpc\]" $HOME/.bitbadgeschain/config/config.toml || echo -e "\n[json-rpc]" >> $HOME/.bitbadgeschain/config/config.toml; \
+sed -i 's/^enable *= *.*/enable = true/' $HOME/.bitbadgeschain/config/config.toml 2>/dev/null || echo 'enable = true' >> $HOME/.bitbadgeschain/config/config.toml; \
+sed -i 's/^address *= *.*/address = "127.0.0.1:8545"/' $HOME/.bitbadgeschain/config/config.toml 2>/dev/null || echo 'address = "127.0.0.1:8545"' >> $HOME/.bitbadgeschain/config/config.toml; \
+sed -i 's/^ws-address *= *.*/ws-address = "127.0.0.1:8546"/' $HOME/.bitbadgeschain/config/config.toml 2>/dev/null || echo 'ws-address = "127.0.0.1:8546"' >> $HOME/.bitbadgeschain/config/config.toml; \
+echo "EVM ve JSON-RPC ayarları tamamlandı."
+```
+
 ---
 
 ## 🔔 Monitoring Script (Opsiyonel)
